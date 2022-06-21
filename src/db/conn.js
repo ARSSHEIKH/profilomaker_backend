@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const db = 'mongodb+srv://arsalan:arsalan@cluster0.xleku.mongodb.net/profilomaker?retryWrites=true&w=majority';
+const db = 'mongodb+srv://arsalan:f4Ehmj1zvZs6N8nr@cluster0.xleku.mongodb.net/profilomaker?retryWrites=true&w=majority';
 
 mongoose.connect(db,{
     useCreateIndex: true,

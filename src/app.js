@@ -1,7 +1,6 @@
 const express = require("express");
 var cors = require("cors")
 const multer = require("multer")
-const upload = multer({ dest: "uploads/" })
 const path = require('path');
 
 require("./db/conn");
@@ -11,14 +10,22 @@ const UserProfiles2 = require("./models/userProfile2");
 const UserProfiles3 = require("./models/userProfile3");
 
 const app = express();
+
+const storage = multer.diskStorage({
+    destination: "uploads/",
+    filename: (req, file, cb) => {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    }
+})
+
+const upload = multer({storage: storage});
+
+
 app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 const port = process.env.PORT || 3200;
 let profile_url = "";
-
-
-
 
 
 
@@ -103,9 +110,10 @@ async function finding() {
     //#region adding data for form3
     app.post(`/add_profile/user/:${profile_url}/form3`, upload.single("profile_pic"), (req, res) => {
 
+        console.log(req.file, req.body)
         let ext = '';
 
-        if(req.file.originalname.split('.').length >1 ){
+        if (req.file.originalname.split('.').length > 1) {
             ext = req.file.originalname.substring(req.file.originalname.lastIndexOf('.'));
         }
         const user = new UserProfiles3({
@@ -207,11 +215,12 @@ async function finding() {
     });
     //#endregion
     app.get('/uploads/:filename', (req, res) => {
-        res.sendFile(req.params.filename, 
-            {root: 
-                path.normalize('C:\\Users\\Desktop\\profilomaker_backend\\uploads')
+        res.sendFile(req.params.filename,
+            {
+                root:
+                    path.normalize('C:\\Users\\Desktop\\profilomaker_backend\\uploads')
             });
-        })
+    })
     //#endregion
 }
 
